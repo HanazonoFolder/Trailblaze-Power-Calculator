@@ -9,8 +9,8 @@
 #include <iomanip>
 
 using namespace std;
-using namespace std:: this_thread;
-using namespace std:: chrono;
+using namespace std::this_thread;
+using namespace std::chrono;
 
 int trailblaze_power_left;
 int trailblaze_power_maximum = 180;
@@ -24,7 +24,7 @@ int main() {
     std::cin >> trailblaze_power_left;
 
     if (trailblaze_power_left < 180) {
-        solution = trailblaze_power_left - trailblaze_power_maximum;
+        solution = trailblaze_power_maximum - trailblaze_power_left;
         answer = solution * trailblaze_power_cooldown;
 
         int hours = std::abs(answer) / 3600; // Get the number of hours
@@ -32,26 +32,33 @@ int main() {
         int seconds = (std::abs(answer) % 3600) % 60; // Get the number of seconds
 
         std::cout << endl << "Will take: "<< std::setw(2) << std::setfill('0') << hours << ":" << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds << endl;
-
+        
         // Get the current time
-        time_t currentTime;
-        time(&currentTime);
-        struct tm* localTime = localtime(&currentTime);
-
-        // Calculate the remaining time
-        int remainingSeconds = answer;
-        remainingSeconds -= (localTime->tm_hour * 3600);
-        remainingSeconds -= (localTime->tm_min * 60);
-        remainingSeconds -= localTime->tm_sec;
+        auto currentTime = std::chrono::system_clock::now();
+        std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* localTime = std::localtime(&currentTime_t);
 
         // Calculate the future time
-        time_t futureTime = currentTime + remainingSeconds;
-        struct tm* futureLocalTime = localtime(&futureTime);
+        auto futureTime = currentTime + std::chrono::seconds(answer);
+        std::time_t futureTime_t = std::chrono::system_clock::to_time_t(futureTime);
+        std::tm* futureLocalTime = std::localtime(&futureTime_t);
 
-        // Display the remaining time
-        std::cout << endl << "Full in: " << std::setw(2) << std::setfill('0') << futureLocalTime->tm_hour << ":" << std::setw(2) << std::setfill('0') << futureLocalTime->tm_min << ":" << std::setw(2) << std::setfill('0') << futureLocalTime->tm_sec << endl;
-        std::cout << endl << endl << "Program will close in 20sec" << endl;
-        std::this_thread::sleep_for(std::chrono::seconds(20));
+        // Display the current time
+        std::cout << endl << "Full in: " << std::put_time(localTime, "%I:%M:%S %p") << std::endl;
+
+        // Get the updated current time
+        currentTime = std::chrono::system_clock::now();
+        currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+        localTime = std::localtime(&currentTime_t);
+
+        // Display the updated current time
+        //std::cout << "Updated current time: " << std::put_time(localTime, "%I:%M:%S %p") << std::endl;
+
+        // Display the future time
+        std::cout << endl << "Current time: " << std::put_time(futureLocalTime, "%I:%M:%S %p") << std::endl;
+        
+        std::cout << endl << endl << "Program will close in 10sec" << endl;
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
     else {
         std::cout << "Invalid Way Above the 180" << endl;
