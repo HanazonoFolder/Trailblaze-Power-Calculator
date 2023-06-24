@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <ctime>
 #include <cmath>
+#include <thread>
 
 int main() {
     // Get the current time
@@ -44,7 +45,7 @@ int main() {
     if (timeDiff < minutesToFull) {
         int fullMinutes = (currentMinute + minutesToFull) % 60;
         int fullHour = (hour12 + (currentMinute + minutesToFull) / 60) % 12;
-        std::string fullPeriod = (currentHour + (currentMinute + minutesToFull) / 60) < 12 ? "PM" : "AM";
+        std::string fullPeriod = (currentHour + (currentMinute + minutesToFull) / 60) >= 12 ? "PM" : "AM";
 
         if (fullHour == 0) {
             fullHour = 12;
@@ -76,5 +77,7 @@ int main() {
         std::cout << ", you need to spend " << trailblazeToSpend << " Trailblaze power." << std::endl;
     }
 
+    std::cout << std::endl << std::endl << "Program will close in 20sec" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(20));
     return 0;
 }
