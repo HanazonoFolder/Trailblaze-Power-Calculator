@@ -11,5 +11,6 @@ HSR TCP v1.0a is the main, it compose of TCP v1.1 and TCP 2 v1.0, its semi compl
 
 I'm returning on this project, with new tools and gui.
 
+(30/07/2024)
 ### Improve Version with GUI and Much Better Overview
 * https://github.com/HanazonoArchive/Energy-System-Calculator-HSR-ZZZ
